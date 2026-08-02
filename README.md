@@ -45,8 +45,10 @@ python3 llmchat.py work
 Named sessions are stored in:
 
 ```text
-~/.local/state/llama-chat/
+the current working directory
 ```
+
+For example, `python3 llmchat.py work` uses `./work.json`, and `python3 llmchat.py` uses `./default.json`.
 
 Use a specific session file path:
 

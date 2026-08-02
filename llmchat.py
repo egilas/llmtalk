@@ -36,8 +36,8 @@ MAX_TOKENS = int(os.environ.get("LLAMA_MAX_TOKENS", "2048"))
 TEMPERATURE = float(os.environ.get("LLAMA_TEMPERATURE", "0.7"))
 HTTP_TIMEOUT = float(os.environ.get("LLAMA_HTTP_TIMEOUT", "2"))
 
-STATE_DIR = Path.home() / ".local" / "state" / "llama-chat"
-DEFAULT_SESSION = STATE_DIR / "default.json"
+SESSION_DIR = Path.cwd()
+DEFAULT_SESSION = SESSION_DIR / "default.json"
 current_session = DEFAULT_SESSION
 
 messages: list[dict[str, str]] = []
@@ -376,8 +376,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "session",
         nargs="?",
         help=(
-            "Session name or file. Names are stored in the default "
-            "state directory; paths such as ./chat.json are used directly."
+            "Session name or file. Names are stored in the current "
+            "working directory; paths such as ./chat.json are used directly."
         ),
     )
     return parser.parse_args(argv)
@@ -416,7 +416,7 @@ def session_path(name: str | None) -> Path:
     if not safe_name.endswith(".json"):
         safe_name += ".json"
 
-    return STATE_DIR / safe_name
+    return SESSION_DIR / safe_name
 
 
 def command_line_session_path(value: str | None) -> Path:
@@ -697,9 +697,16 @@ def estimate_tokens_from_chars(items: list[dict[str, str]]) -> int:
     return max(1, round(chars / 4)) if chars else 0
 
 
+def has_user_message(items: list[dict[str, str]]) -> bool:
+    return any(item.get("role") == "user" for item in items)
+
+
 def count_input_tokens(items: list[dict[str, str]]) -> tuple[int | None, str]:
     if not items:
         return 0, "server"
+
+    if not has_user_message(items):
+        return estimate_tokens_from_chars(items), "estimate"
 
     payload = {
         "messages": items,
@@ -1115,10 +1122,10 @@ Environment variables:
 
 
 def show_sessions() -> None:
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    SESSION_DIR.mkdir(parents=True, exist_ok=True)
 
     session_files = sorted(
-        STATE_DIR.glob("*.json"),
+        SESSION_DIR.glob("*.json"),
         key=lambda path: path.stat().st_mtime,
         reverse=True,
     )
@@ -1624,7 +1631,7 @@ def main(argv: list[str] | None = None) -> None:
 
     current_session = command_line_session_path(args.session)
 
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    SESSION_DIR.mkdir(parents=True, exist_ok=True)
 
     print(label_value("Session file", current_session, "cyan"))
 
