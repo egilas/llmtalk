@@ -1,6 +1,6 @@
-# llmchat
+# llmtalk
 
-`llmchat` is a small terminal chat client for OpenAI-compatible chat completion servers.
+`llmtalk` is a small terminal chat client for OpenAI-compatible chat completion servers.
 
 It keeps local conversation sessions, streams responses, supports text file attachments, and includes a few workflow helpers for long-running local model conversations.
 
@@ -33,13 +33,13 @@ python3 -m pip install -r requirements.txt
 Start with the default server and default session:
 
 ```sh
-python3 llmchat.py
+python3 llmtalk.py
 ```
 
 Use a named session:
 
 ```sh
-python3 llmchat.py work
+python3 llmtalk.py work
 ```
 
 Named sessions are stored in:
@@ -48,21 +48,21 @@ Named sessions are stored in:
 the current working directory
 ```
 
-For example, `python3 llmchat.py work` uses `./work.json`, and `python3 llmchat.py` uses `./default.json`.
+For example, `python3 llmtalk.py work` uses `./work.json`, and `python3 llmtalk.py` uses `./default.json`.
 
 Use a specific session file path:
 
 ```sh
-python3 llmchat.py ./work.json
+python3 llmtalk.py ./work.json
 ```
 
 Use a different server:
 
 ```sh
-python3 llmchat.py --server http://127.0.0.1:8081
+python3 llmtalk.py --server http://127.0.0.1:8081
 ```
 
-If `--server` is a base URL, `llmchat` expands it to:
+If `--server` is a base URL, `llmtalk` expands it to:
 
 ```text
 /v1/chat/completions
@@ -71,7 +71,7 @@ If `--server` is a base URL, `llmchat` expands it to:
 You can also pass the full endpoint:
 
 ```sh
-python3 llmchat.py --server http://127.0.0.1:8081/v1/chat/completions work
+python3 llmtalk.py --server http://127.0.0.1:8081/v1/chat/completions work
 ```
 
 ## Configuration
@@ -117,7 +117,7 @@ Press `Tab` after a slash command prefix to complete it. Press `Tab` again while
 
 ## Manual Compaction
 
-Long sessions can grow beyond the model context window. `llmchat` never compacts automatically, but you can choose the active context yourself.
+Long sessions can grow beyond the model context window. `llmtalk` never compacts automatically, but you can choose the active context yourself.
 
 Example:
 
@@ -135,13 +135,13 @@ Disable compaction:
 
 ## Context Stats
 
-When supported by the server, `llmchat` displays token usage above the prompt:
+When supported by the server, `llmtalk` displays token usage above the prompt:
 
 ```text
 Context: 3,120/8,192 tokens (38.1%, 5,072 left, max out 2,048) | next: #43 | active: #39-#42 + system | messages: 42
 ```
 
-For llama.cpp-style servers, `llmchat` can use:
+For llama.cpp-style servers, `llmtalk` can use:
 
 - `GET /props`
 - `POST /v1/chat/completions/input_tokens`

@@ -363,12 +363,12 @@ prompt_session: PromptSession[str] = PromptSession(
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Small terminal chat client for llama-server.",
+        description="llmtalk: a terminal chat client for OpenAI-compatible chat servers.",
     )
     parser.add_argument(
         "--server",
         help=(
-            "llama-server URL. A base URL such as http://127.0.0.1:8080 "
+            "Chat server URL. A base URL such as http://127.0.0.1:8080 "
             "is expanded to /v1/chat/completions."
         ),
     )
